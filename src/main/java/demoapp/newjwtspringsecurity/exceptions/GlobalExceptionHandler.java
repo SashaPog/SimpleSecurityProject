@@ -2,9 +2,9 @@ package demoapp.newjwtspringsecurity.exceptions;
 
 import demoapp.newjwtspringsecurity.dto.ApiErrorResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -13,7 +13,6 @@ import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.Instant;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
@@ -22,7 +21,6 @@ import org.springframework.web.method.annotation.HandlerMethodValidationExceptio
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    // 1️⃣ Validation — @Valid DTO errors
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiErrorResponse> handleValidation(MethodArgumentNotValidException ex,
                                                              HttpServletRequest req) {
@@ -46,11 +44,10 @@ public class GlobalExceptionHandler {
         return build(HttpStatus.BAD_REQUEST, "Validation error", ex.getMessage(), req);
     }
 
-    // 2️⃣ Binding errors (@ModelAttribute, form-data)
     @ExceptionHandler(BindException.class)
     public ResponseEntity<ApiErrorResponse> handleBind(BindException ex, HttpServletRequest req) {
         String msg = ex.getAllErrors().stream().findFirst()
-            .map(e -> e.getDefaultMessage())
+            .map(DefaultMessageSourceResolvable::getDefaultMessage)
             .orElse("Bind error");
 
         log.warn("Binding failed: {}", msg);
@@ -58,7 +55,6 @@ public class GlobalExceptionHandler {
         return build(HttpStatus.BAD_REQUEST, "Binding error", msg, req);
     }
 
-    // 3️⃣ Security — доступ заборонено
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ApiErrorResponse> handleAccessDenied(AccessDeniedException ex,
                                                                HttpServletRequest req) {
@@ -66,7 +62,6 @@ public class GlobalExceptionHandler {
         return build(HttpStatus.FORBIDDEN, "Forbidden", ex.getMessage(), req);
     }
 
-    // 4️⃣ HTTP method not allowed
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<ApiErrorResponse> handleMethodNotAllowed(HttpRequestMethodNotSupportedException ex,
                                                                    HttpServletRequest req) {
@@ -74,7 +69,6 @@ public class GlobalExceptionHandler {
         return build(HttpStatus.METHOD_NOT_ALLOWED, "Method not allowed", ex.getMessage(), req);
     }
 
-    // 5️⃣ Wrong Content-Type
     @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
     public ResponseEntity<ApiErrorResponse> handleMediaType(HttpMediaTypeNotSupportedException ex,
                                                             HttpServletRequest req) {
@@ -82,7 +76,6 @@ public class GlobalExceptionHandler {
         return build(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "Unsupported media type", ex.getMessage(), req);
     }
 
-    // 7️⃣ Catch-all — все, що не оброблено
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiErrorResponse> handleGeneral(Exception ex, HttpServletRequest req) {
         log.error("Unexpected error", ex);
@@ -93,7 +86,6 @@ public class GlobalExceptionHandler {
             req);
     }
 
-    // 📦 helper (єдиний формат відповіді)
     private ResponseEntity<ApiErrorResponse> build(HttpStatus status,
                                                    String error,
                                                    String message,
