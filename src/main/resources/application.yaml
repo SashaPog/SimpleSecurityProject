@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: "NewJWTSpringSecurity"
+
+    #conection database
+  datasource:
+    url: "jdbc:postgresql://localhost:5432/newjwtsecurity"
+    username: "postgres"
+    password: "postgres"
+    driver-class-name: org.postgresql.Driver
+
+    #show sql logs
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    open-in-view: false
+
+security:
+  jwt:
+    secret-key: "d0fec904dd87b42f77013ae85cd4e59dc0a177180b0531dbee4d8c0106905dbb"
+
+server:
+  port: 8081
