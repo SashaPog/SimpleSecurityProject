@@ -21,7 +21,7 @@ public class SecurityConfig {
     private final AuthenticationProvider authenticationProvider;
 
     @Bean
-    public SecurityFilterChain securityFilterChain (HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .csrf(AbstractHttpConfigurer::disable)
             .sessionManagement(session ->
@@ -32,8 +32,9 @@ public class SecurityConfig {
             .authenticationProvider(authenticationProvider)
             .authorizeHttpRequests(req ->
                 req.requestMatchers(
-                    "/error",
-                    "/api/v1/auth/**")
+                        "/error",
+                        "/api/v1/auth/**",
+                        "/api/v1/demo-controller/sayEmail")
                     .permitAll()
                     .requestMatchers("/api/v1/**")
                     .authenticated()

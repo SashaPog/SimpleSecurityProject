@@ -4,6 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -14,6 +15,12 @@ public class DemoController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<String> sayHello() {
         return ResponseEntity.ok("Hello from secure endpoint");
+    }
+
+    @GetMapping("/say-email")
+    @PreAuthorize("@userComponent.userHasAccess(#email)")
+    public ResponseEntity<String> sayEmail(@RequestParam String email) {
+        return ResponseEntity.ok(email);
     }
 
 
