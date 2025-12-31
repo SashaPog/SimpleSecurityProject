@@ -35,10 +35,11 @@ public class SecurityConfig {
                 req.requestMatchers(
                         "/error",
                         "/api/v1/auth/**",
-                        "/api/v1/demo-controller/sayEmail")
+                        "/api/v1/demo-controller/sayEmail",
+                        "/api/v1/**")
                     .permitAll()
-                    .requestMatchers("/api/v1/**")
-                    .authenticated()
+//                    .requestMatchers("/api/v1/**")
+//                    .authenticated()
             );
 
         return http.build();
