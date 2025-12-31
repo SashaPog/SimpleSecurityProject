@@ -3,8 +3,9 @@ package demoapp.newjwtspringsecurity.mapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import demoapp.newjwtspringsecurity.dto.RegisterRequestDto;
-import demoapp.newjwtspringsecurity.model.User;
+import demoapp.newjwtspringsecurity.auth.dto.mapper.RegisterRequestDtoUserMapper;
+import demoapp.newjwtspringsecurity.auth.dto.RegisterRequestDto;
+import demoapp.newjwtspringsecurity.user.domain.User;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 
